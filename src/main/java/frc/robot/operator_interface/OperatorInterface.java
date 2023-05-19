@@ -25,19 +25,19 @@ public interface OperatorInterface {
     return 0.0;
   }
 
-  public default Trigger getFieldRelativeButton() {
+  public default Trigger getIntakeButton() {
     return new Trigger(() -> false);
   }
 
-  public default Trigger getResetGyroButton() {
+  public default Trigger getPlaceButton() {
     return new Trigger(() -> false);
   }
 
-  public default Trigger getXStanceButton() {
+  public default Trigger getTranslateRightButton() {
     return new Trigger(() -> false);
   }
 
-  public default Trigger getVisionIsEnabledSwitch() {
+  public default Trigger getTranslateLeftButton() {
     return new Trigger(() -> false);
   }
 }

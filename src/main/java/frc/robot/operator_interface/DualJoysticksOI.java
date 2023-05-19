@@ -45,22 +45,22 @@ public class DualJoysticksOI implements OperatorInterface {
   }
 
   @Override
-  public Trigger getFieldRelativeButton() {
-    return translateJoystickButtons[3];
-  }
-
-  @Override
-  public Trigger getResetGyroButton() {
-    return rotateJoystickButtons[3];
-  }
-
-  @Override
-  public Trigger getXStanceButton() {
+  public Trigger getIntakeButton() {
     return translateJoystickButtons[1];
   }
 
   @Override
-  public Trigger getVisionIsEnabledSwitch() {
+  public Trigger getPlaceButton() {
     return rotateJoystickButtons[1];
+  }
+
+  @Override
+  public Trigger getTranslateLeftButton() {
+    return rotateJoystickButtons[4];
+  }
+
+  @Override
+  public Trigger getTranslateRightButton() {
+    return rotateJoystickButtons[5];
   }
 }
