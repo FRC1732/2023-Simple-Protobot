@@ -31,22 +31,22 @@ public class SingleHandheldOI implements OperatorInterface {
   }
 
   @Override
-  public Trigger getFieldRelativeButton() {
+  public Trigger getIntakeButton() {
     return new Trigger(controller::getBButton);
   }
 
   @Override
-  public Trigger getResetGyroButton() {
+  public Trigger getPlaceButton() {
     return new Trigger(controller::getStartButton);
   }
 
   @Override
-  public Trigger getXStanceButton() {
+  public Trigger getTranslateRightButton() {
     return new Trigger(controller::getYButton);
   }
 
   @Override
-  public Trigger getVisionIsEnabledSwitch() {
+  public Trigger getTranslateLeftButton() {
     return new Trigger(controller::getXButton);
   }
 }

@@ -16,19 +16,21 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.lib.team3061.RobotConfig;
 import frc.lib.team3061.gyro.GyroIO;
 import frc.lib.team3061.gyro.GyroIOAdis16470;
-import frc.lib.team3061.pneumatics.Pneumatics;
-import frc.lib.team3061.pneumatics.PneumaticsIORev;
 import frc.lib.team3061.swerve.SwerveModule;
 import frc.lib.team3061.swerve.SwerveModuleIOTalonFX;
 import frc.lib.team3061.vision.Vision;
-import frc.lib.team3061.vision.VisionIOPhotonVision;
 import frc.robot.commands.FeedForwardCharacterization;
 import frc.robot.commands.FeedForwardCharacterization.FeedForwardCharacterizationData;
 import frc.robot.commands.FollowPath;
+import frc.robot.commands.ManipulatorCommands.ManipulatorIntake;
+import frc.robot.commands.ManipulatorCommands.ManipulatorPlace;
+import frc.robot.commands.ManipulatorCommands.ManipulatorStop;
+import frc.robot.commands.ManipulatorCommands.ManipulatorTranslate;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.configs.MK4RobotConfig;
 import frc.robot.operator_interface.OISelector;
 import frc.robot.operator_interface.OperatorInterface;
+import frc.robot.subsystems.Manipulator;
 import frc.robot.subsystems.drivetrain.Drivetrain;
 import java.util.HashMap;
 import java.util.List;
@@ -45,6 +47,7 @@ public class RobotContainer {
   private OperatorInterface oi = new OperatorInterface() {};
   private RobotConfig config;
   private Drivetrain drivetrain;
+  private Manipulator manipulator;
   private Vision vision;
 
   // use AdvantageKit's LoggedDashboardChooser instead of SendableChooser to ensure accurate logging
@@ -115,9 +118,9 @@ public class RobotContainer {
             config.getRobotMaxVelocity());
 
     drivetrain = new Drivetrain(gyro, flModule, frModule, blModule, brModule);
-    new Pneumatics(new PneumaticsIORev());
-    vision = new Vision(new VisionIOPhotonVision(config.getCameraName()));
-
+    // new Pneumatics(new PneumaticsIORev());
+    // vision = new Vision(new VisionIOPhotonVision(config.getCameraName()));
+    this.manipulator = new Manipulator();
     // disable all telemetry in the LiveWindow to reduce the processing during each iteration
     LiveWindow.disableAllTelemetry();
 
@@ -165,28 +168,17 @@ public class RobotContainer {
 
   /** Use this method to define your button->command mappings. */
   private void configureButtonBindings() {
-    // field-relative toggle
-    oi.getFieldRelativeButton()
-        .toggleOnTrue(
-            Commands.either(
-                Commands.runOnce(drivetrain::disableFieldRelative, drivetrain),
-                Commands.runOnce(drivetrain::enableFieldRelative, drivetrain),
-                drivetrain::getFieldRelative));
+    oi.getIntakeButton().onTrue(new ManipulatorIntake(this.manipulator));
+    oi.getIntakeButton().onFalse(new ManipulatorStop(this.manipulator));
 
-    // reset gyro to 0 degrees
-    oi.getResetGyroButton().onTrue(Commands.runOnce(drivetrain::zeroGyroscope, drivetrain));
+    oi.getPlaceButton().onTrue(new ManipulatorPlace(this.manipulator));
+    oi.getPlaceButton().onFalse(new ManipulatorStop(this.manipulator));
 
-    // x-stance
-    oi.getXStanceButton().onTrue(Commands.runOnce(drivetrain::enableXstance, drivetrain));
-    oi.getXStanceButton().onFalse(Commands.runOnce(drivetrain::disableXstance, drivetrain));
-    oi.getVisionIsEnabledSwitch()
-        .toggleOnTrue(
-            Commands.either(
-                Commands.parallel(
-                    Commands.runOnce(() -> vision.enable(false)),
-                    Commands.runOnce(drivetrain::resetPoseRotationToGyro)),
-                Commands.runOnce(() -> vision.enable(true), vision),
-                vision::isEnabled));
+    oi.getTranslateLeftButton().onTrue(new ManipulatorTranslate(this.manipulator, false));
+    oi.getTranslateLeftButton().onFalse(new ManipulatorStop(this.manipulator));
+
+    oi.getTranslateRightButton().onTrue(new ManipulatorTranslate(this.manipulator, true));
+    oi.getTranslateRightButton().onFalse(new ManipulatorStop(this.manipulator));
   }
 
   /** Use this method to define your commands for autonomous mode. */

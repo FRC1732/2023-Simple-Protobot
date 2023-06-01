@@ -23,7 +23,7 @@ public class MK4RobotConfig extends RobotConfig {
   private static final int FRONT_RIGHT_MODULE_STEER_ENCODER = 32;
   private static final double FRONT_RIGHT_MODULE_STEER_OFFSET = 154.2754;
 
-  private static final int BACK_LEFT_MODULE_DRIVE_MOTOR = 10;
+  private static final int BACK_LEFT_MODULE_DRIVE_MOTOR = 13;
   private static final int BACK_LEFT_MODULE_STEER_MOTOR = 11;
   private static final int BACK_LEFT_MODULE_STEER_ENCODER = 12;
   private static final double BACK_LEFT_MODULE_STEER_OFFSET = 222.2754 + 180;
